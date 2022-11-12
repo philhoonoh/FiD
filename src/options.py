@@ -100,7 +100,7 @@ class Options():
                 comment = f'\t(default: {default_value})'
             message += f'{str(k):>30}: {str(v):<40}{comment}\n'
 
-        expr_dir = Path(opt.checkpoint_dir)/ opt.name
+        expr_dir = Path(opt.pwd)/ opt.name
         model_dir = expr_dir / 'models'
         model_dir.mkdir(parents=True, exist_ok=True)
         with open(expr_dir/'opt.log', 'wt') as opt_file:
