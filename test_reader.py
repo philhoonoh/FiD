@@ -56,7 +56,7 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
                     exactmatch.append(score)
 
                 if opt.write_results:
-                    fw.write(str(example['id']) + "\t" + ans + '\n')
+                    fw.write(str(example['id']) + "\t" + ans  + "\t" + str(score) + '\n')
                 if opt.write_crossattention_scores:
                     for j in range(context_ids.size(1)):
                         example['ctxs'][j]['score'] = crossattention_scores[k, j].item()
@@ -95,7 +95,14 @@ if __name__ == "__main__":
     if opt.write_results:
         (dir_path / 'test_results').mkdir(parents=True, exist_ok=True)
     logger = src.util.init_logger(opt.is_main, opt.is_distributed, Path(opt.checkpoint_dir) / opt.name / 'run.log')
-    if not directory_exists and opt.is_main:
+
+    # dir_path was executed before creating directory on the designated path
+    # there might be reasons for authors to do this way.
+    # but 1 executing test_reader.py will always throw an error :(
+    # after 1st execution, script is running without any interruptions
+    # better way to do this would be
+    # if not directory_exists and opt.is_main:
+    if not dir_path.exists() and opt.is_main:
         options.print_options(opt)
 
 
