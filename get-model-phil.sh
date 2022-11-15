@@ -36,7 +36,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 #if ! [ -v MAP[$MODEL] ];then
-#    echo "Model id not recognized, available models:";
+#    echo "Model id not recognized, available model:";
 #    echo $allkeys;
 #    exit 1;
 #fi

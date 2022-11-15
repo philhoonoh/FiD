@@ -69,7 +69,7 @@ class Options():
     def initialize_parser(self):
         # basic parameters
         self.parser.add_argument('--name', type=str, default='experiment_name', help='name of the experiment')
-        self.parser.add_argument('--checkpoint_dir', type=str, default='./checkpoint/', help='models are saved here')
+        self.parser.add_argument('--checkpoint_dir', type=str, default='./checkpoint/', help='model are saved here')
         self.parser.add_argument('--model_path', type=str, default='none', help='path for retraining')
 
         # dataset parameters
@@ -101,7 +101,7 @@ class Options():
             message += f'{str(k):>30}: {str(v):<40}{comment}\n'
 
         expr_dir = Path(opt.pwd)/ opt.name
-        model_dir = expr_dir / 'models'
+        model_dir = expr_dir / 'model'
         model_dir.mkdir(parents=True, exist_ok=True)
         with open(expr_dir/'opt.log', 'wt') as opt_file:
             opt_file.write(message)
