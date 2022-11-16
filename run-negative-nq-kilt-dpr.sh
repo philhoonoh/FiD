@@ -3,7 +3,7 @@
 a=6
 for ((i = 1; i < a; i++)); do
   for ((j = i; j < a; j++)); do
-    device_per_batch=$((768 / j))
+    device_per_batch=$((192 / j))
     name="kilt_dpr_nq_dev_pos${i}"
     dataset="${name}.json"
     attempt="${name}_context${j}"
