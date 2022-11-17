@@ -20,7 +20,7 @@ for ((i = 1; i < a; i++)); do
     "
     CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-        --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_DPR/"$dataset" \
+        --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/"$dataset" \
         --write_results \
         --per_gpu_batch_size "$device_per_batch" \
         --n_context "$j" \
