@@ -3,12 +3,12 @@
 a=6
 for ((i = 1; i < a; i++)); do
   for ((j = i; j < a; j++)); do
-    device_per_batch=$((192 / j))
+    device_per_batch=$((576 / j))
     name="kilt_dpr_nq_dev_pos${i}"
     dataset="${name}.json"
     attempt="${name}_context${j}"
 
-    echo "CUDA_VISIBLE_DEVICES=0,1 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_DPR/"$dataset" \
         --write_results \
@@ -17,7 +17,7 @@ for ((i = 1; i < a; i++)); do
         --name "$attempt" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/KILT_DPR_NQ
     "
-    CUDA_VISIBLE_DEVICES=0,1 python test_reader.py \
+    CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_DPR/"$dataset" \
         --write_results \
