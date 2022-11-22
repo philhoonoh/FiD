@@ -9,7 +9,7 @@ for ((i = 1; i < a; i++)); do
     dataset="${name}.json"
     attempt="${name}_context${j}"
 
-    echo "CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=1 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/"$dataset" \
         --write_results \
@@ -18,7 +18,7 @@ for ((i = 1; i < a; i++)); do
         --name "$attempt" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/KILT_RANDOM_NQ
     "
-    CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
+    CUDA_VISIBLE_DEVICES=1 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/"$dataset" \
         --write_results \
@@ -29,13 +29,15 @@ for ((i = 1; i < a; i++)); do
   done
 done
 
-#CUDA_VISIBLE_DEVICES=1 python test_reader.py \
-#--model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \ fixed
-#--eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/kilt_rand_nq_dev_pos1.json \ train/dev
-#--write_results \ fixed
-#--per_gpu_batch_size 1 \ 5,4,3,2,1
-#--n_context 1 \ 1,2,3,4,5
-#--name first_context \ 1_context, 2_context, 3_context, ...
-#--checkpoint_dir /data/philhoon-relevance/FiD/results fixed
+
+#CUDA_VISIBLE_DEVICES=1,2 python test_reader.py \
+#--model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
+#--eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/kilt_rand_nq_dev_pos1.json \
+#--write_results \
+#--per_gpu_batch_size 576 \
+#--n_context 1 \
+#--name kilt_dpr_nq_dev_pos1_context1_gpu12 \
+#--checkpoint_dir /data/philhoon-relevance/FiD/results/KILT_RANDOM_NQ_test
+
 #kilt_dpr_nq_dev_pos5.json
 #kilt_dpr_nq_dev_pos_5.json
