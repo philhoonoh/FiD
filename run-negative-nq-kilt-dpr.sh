@@ -8,7 +8,7 @@ for ((i = 1; i < a; i++)); do
     dataset="${name}.json"
     attempt="${name}_context${j}"
 
-    echo "CUDA_VISIBLE_DEVICES=6,7 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=1 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_DPR/"$dataset" \
         --write_results \
