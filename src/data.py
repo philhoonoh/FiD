@@ -93,7 +93,6 @@ def encode_passages(batch_text_passages, tokenizer, max_length, n_context):
             p['input_ids'] = torch.cat([p['input_ids'], repli_tensor], dim=0)
 
         # Add extra 'attention_mask'  for passages <  n_context size
-        print(p['input_ids'].shape)
         cur_ctx = p['attention_mask'].shape[0]
         if cur_ctx < n_context:
             repl_lst = []
