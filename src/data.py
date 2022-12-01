@@ -109,8 +109,8 @@ def encode_passages(batch_text_passages, tokenizer, max_length, n_context):
     passage_ids = torch.cat(passage_ids, dim=0)
     passage_masks = torch.cat(passage_masks, dim=0)
 
-    passage_ids = torch.tensor(passage_ids).to(torch.int64)
-    passage_masks = torch.tensor(passage_masks).to(torch.int64)
+    passage_ids = passage_ids.to(torch.int64)
+    passage_masks = passage_masks.to(torch.int64)
     return passage_ids, passage_masks.bool()
 
 class Collator(object):
