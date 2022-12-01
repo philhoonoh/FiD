@@ -2,6 +2,7 @@
 
 for file in /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_BM25_SELECTION/*.json
 do
+    name=${file##*/}
     base=${name%.json}
 
     echo "CUDA_VISIBLE_DEVICES=7 python test_reader.py \
