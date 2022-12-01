@@ -70,7 +70,7 @@ class Dataset(torch.utils.data.Dataset):
     def get_example(self, index):
         return self.data[index]
 
-def encode_passages(batch_text_passages, tokenizer, max_length):
+def encode_passages(batch_text_passages, tokenizer, max_length, n_context):
     passage_ids, passage_masks = [], []
     for k, text_passages in enumerate(batch_text_passages):
         p = tokenizer.batch_encode_plus(
@@ -80,6 +80,27 @@ def encode_passages(batch_text_passages, tokenizer, max_length):
             return_tensors='pt',
             truncation=True
         )
+
+        # Add extra 'input_ids'  for passages <  n_context size
+        cur_ctx = p['input_ids'].shape[0]
+        if cur_ctx < n_context:
+            repl_lst = []
+            while cur_ctx < n_context:
+                cur_ctx += 1
+                repl_lst.append(torch.zeros_like(p['input_ids']))
+            repli_tensor = torch.cat(repl_lst, dim=0)
+            p['input_ids'] = torch.cat([p['input_ids'], repli_tensor], dim=0)
+        # Add extra 'attention_mask'  for passages <  n_context size
+        cur_ctx = p['attention_mask'].shape[0]
+        if cur_ctx < n_context:
+            repl_lst = []
+            while cur_ctx < n_context:
+                cur_ctx += 1
+                repl_lst.append(torch.zeros_like(p['attention_mask']))
+            repli_tensor = torch.cat(repl_lst, dim=0)
+            p['attention_mask'] = torch.cat([p['attention_mask'], repli_tensor], dim=0)
+
+
         passage_ids.append(p['input_ids'][None])
         passage_masks.append(p['attention_mask'][None])
 
@@ -88,10 +109,11 @@ def encode_passages(batch_text_passages, tokenizer, max_length):
     return passage_ids, passage_masks.bool()
 
 class Collator(object):
-    def __init__(self, text_maxlength, tokenizer, answer_maxlength=20):
+    def __init__(self, text_maxlength, tokenizer, n_context, answer_maxlength=20):
         self.tokenizer = tokenizer
         self.text_maxlength = text_maxlength
         self.answer_maxlength = answer_maxlength
+        self.n_context = n_context
 
     def __call__(self, batch):
         assert(batch[0]['target'] != None)
@@ -115,7 +137,8 @@ class Collator(object):
         text_passages = [append_question(example) for example in batch]
         passage_ids, passage_masks = encode_passages(text_passages,
                                                      self.tokenizer,
-                                                     self.text_maxlength)
+                                                     self.text_maxlength,
+                                                     self.n_context)
 
         return (index, target_ids, target_mask, passage_ids, passage_masks)
 
