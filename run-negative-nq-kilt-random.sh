@@ -29,7 +29,7 @@ for ((i = 1; i < a; i++)); do
   done
 done
 
-
+# Incremental Inference by pos and ctx size on nq-kilt-random
 #CUDA_VISIBLE_DEVICES=1,2 python test_reader.py \
 #--model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
 #--eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_RANDOM/kilt_rand_nq_dev_pos1.json \
