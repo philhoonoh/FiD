@@ -46,6 +46,7 @@ do
     name=${file##*/}
     base=${name%.json}
     echo "
+      "$file"
       "$name"
       "$base"
     "
