@@ -14,14 +14,14 @@ do
         --name "$base" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_KILT_BM25_SELECTION
     "
-#    CUDA_VISIBLE_DEVICES=7 python test_reader.py \
-#        --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-#        --eval_data "$file" \
-#        --write_results \
-#        --per_gpu_batch_size 64 \
-#        --n_context 5 \
-#        --name "$base" \
-#        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_KILT_BM25_SELECTION
+    CUDA_VISIBLE_DEVICES=7 python test_reader.py \
+        --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
+        --eval_data "$file" \
+        --write_results \
+        --per_gpu_batch_size 64 \
+        --n_context 5 \
+        --name "$base" \
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_KILT_BM25_SELECTION
 done
 
 # Script for selection strategies
