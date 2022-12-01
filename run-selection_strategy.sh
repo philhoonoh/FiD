@@ -4,7 +4,7 @@ for file in /data/philhoon-relevance/FiD/open_domain_data/NQ_KILT_BM25_SELECTION
 do
     base=${name%.json}
 
-    echo "CUDA_VISIBLE_DEVICES=1 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=7 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
@@ -13,7 +13,7 @@ do
         --name "$base" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_KILT_BM25_SELECTION
     "
-    CUDA_VISIBLE_DEVICES=1 python test_reader.py \
+    CUDA_VISIBLE_DEVICES=7 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
