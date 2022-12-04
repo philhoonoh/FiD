@@ -9,7 +9,7 @@ do
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
-        --per_gpu_batch_size 32 \
+        --per_gpu_batch_size 48 \
         --n_context 20 \
         --name "$base" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR_DEV_SELECTION
@@ -18,7 +18,7 @@ do
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
-        --per_gpu_batch_size 32 \
+        --per_gpu_batch_size 48 \
         --n_context 20 \
         --name "$base" \
         --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR_DEV_SELECTION
