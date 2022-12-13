@@ -3,8 +3,8 @@
 dataArray=("dev")
 
 for data in ${dataArray[@]}; do
-    for i in {2..100}; do
-        val1=$((768 / i))
+    for i in {15..100}; do
+        val1=$((896 / i))
         dataset="${data}.json"
         attempt="TQA_${data}_${i}_context"
 #        echo "${val1}"
