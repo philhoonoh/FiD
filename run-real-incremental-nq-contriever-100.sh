@@ -3,28 +3,29 @@
 dataArray=("dev")
 
 for data in ${dataArray[@]}; do
-    for i in {15..100}; do
-        val1=$((896 / i))
-        dataset="${data}.json"
-        attempt="TQA_${data}_${i}_context"
+    for i in {1..100}; do
+        val1=$((768 / i))
+        dataset="${data}.jsonl"
+        attempt="NQ_${data}_${i}_context"
 #        echo "${val1}"
-        echo "CUDA_VISIBLE_DEVICES=6 python test_reader.py \
+
+        echo "CUDA_VISIBLE_DEVICES=5 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-        --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+        --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
         --write_results \
         --per_gpu_batch_size "$val1" \
         --n_context "$i" \
         --name "$attempt" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_CONTRIEVER/DEV
         "
-        CUDA_VISIBLE_DEVICES=6 python test_reader.py \
+        CUDA_VISIBLE_DEVICES=5 python test_reader.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-        --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+        --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
         --write_results \
         --per_gpu_batch_size "$val1" \
         --n_context "$i" \
         --name "$attempt" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_CONTRIEVER/DEV
     done
 done
 
