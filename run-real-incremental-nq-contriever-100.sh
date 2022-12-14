@@ -3,8 +3,8 @@
 dataArray=("dev")
 
 for data in ${dataArray[@]}; do
-    for i in {1..100}; do
-        val1=$((768 / i))
+    for i in {34..100}; do
+        val1=$((992 / i))
         dataset="${data}.jsonl"
         attempt="NQ_${data}_${i}_context"
 #        echo "${val1}"
