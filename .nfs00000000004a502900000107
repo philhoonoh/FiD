@@ -1,0 +1,164 @@
+test_reader-slurm.py       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large       --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/test.json       --write_results       --per_gpu_batch_size 768       --n_context 1       --name NQ_test_1_context       --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/TEST
+      
+[12/15/2022 13:33:49] {configuration_utils.py:262} INFO - loading configuration file /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large/config.json
+[12/15/2022 13:33:49] {configuration_utils.py:300} INFO - Model config T5Config {
+  "architectures": [
+    "FiDT5"
+  ],
+  "d_ff": 4096,
+  "d_kv": 64,
+  "d_model": 1024,
+  "decoder_start_token_id": 0,
+  "dropout_rate": 0.1,
+  "eos_token_id": 1,
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_heads": 16,
+  "num_layers": 24,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "vocab_size": 32128
+}
+
+[12/15/2022 13:33:49] {modeling_utils.py:665} INFO - loading weights file /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large/pytorch_model.bin
+[12/15/2022 13:34:00] {modeling_utils.py:765} INFO - All model checkpoint weights were used when initializing FiDT5.
+
+[12/15/2022 13:34:00] {modeling_utils.py:773} INFO - All the weights of FiDT5 were initialized from the model checkpoint at /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large.
+If your task is similar to the task the model of the ckeckpoint was trained on, you can already use FiDT5 for predictions without further training.
+[12/15/2022 13:34:02] {test_reader-slurm.py:148} INFO - Start eval
+/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/utils/data/dataloader.py:554: UserWarning: This DataLoader will create 20 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
+Traceback (most recent call last):
+  File "test_reader-slurm.py", line 149, in <module>
+    exactmatch, total = evaluate(model, eval_dataset, eval_dataloader, tokenizer, opt)
+  File "test_reader-slurm.py", line 43, in evaluate
+    outputs = model.generate(
+  File "/home/philhoon/relevance_retrieval/FiD/src/model.py", line 51, in generate
+    return super().generate(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 27, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/generation_utils.py", line 462, in generate
+    output = self._generate_no_beam_search(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/generation_utils.py", line 520, in _generate_no_beam_search
+    outputs = self(**model_inputs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/philhoon/relevance_retrieval/FiD/src/model.py", line 42, in forward
+    return super().forward(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/modeling_t5.py", line 1126, in forward
+    decoder_outputs = self.decoder(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/modeling_t5.py", line 738, in forward
+    layer_outputs = layer_module(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/modeling_t5.py", line 529, in forward
+    cross_attention_outputs = self.layer[1](
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/modeling_t5.py", line 451, in forward
+    attention_output = self.EncDecAttention(
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1190, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/transformers/modeling_t5.py", line 361, in forward
+    scores = torch.einsum("bnqd,bnkd->bnqk", q, k)  # (bs, n_heads, qlen, klen)
+  File "/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/functional.py", line 378, in einsum
+    return _VF.einsum(equation, operands)  # type: ignore[attr-defined]
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 600.00 MiB (GPU 0; 47.54 GiB total capacity; 35.57 GiB already allocated; 196.69 MiB free; 36.39 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+test_reader-slurm.py       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large       --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/test.json       --write_results       --per_gpu_batch_size 384       --n_context 2       --name NQ_test_2_context       --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/TEST
+      
+[12/15/2022 13:34:52] {configuration_utils.py:262} INFO - loading configuration file /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large/config.json
+[12/15/2022 13:34:52] {configuration_utils.py:300} INFO - Model config T5Config {
+  "architectures": [
+    "FiDT5"
+  ],
+  "d_ff": 4096,
+  "d_kv": 64,
+  "d_model": 1024,
+  "decoder_start_token_id": 0,
+  "dropout_rate": 0.1,
+  "eos_token_id": 1,
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_heads": 16,
+  "num_layers": 24,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "vocab_size": 32128
+}
+
+[12/15/2022 13:34:52] {modeling_utils.py:665} INFO - loading weights file /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large/pytorch_model.bin
+[12/15/2022 13:35:03] {modeling_utils.py:765} INFO - All model checkpoint weights were used when initializing FiDT5.
+
+[12/15/2022 13:35:03] {modeling_utils.py:773} INFO - All the weights of FiDT5 were initialized from the model checkpoint at /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large.
+If your task is similar to the task the model of the ckeckpoint was trained on, you can already use FiDT5 for predictions without further training.
+[12/15/2022 13:35:04] {test_reader-slurm.py:148} INFO - Start eval
+/home/philhoon/miniconda3/envs/FiD/lib/python3.8/site-packages/torch/utils/data/dataloader.py:554: UserWarning: This DataLoader will create 20 worker processes in total. Our suggested max number of worker in current system is 1, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(_create_warning_msg(
