@@ -6,7 +6,9 @@ export i=$SLURM_ARRAY_TASK_ID
 export gpu_=$CUDA_VISIBLE_DEVICES
 
 data="dev"
-dataset="${data}.json"
+
+# jsonl file for contriever
+dataset="${data}.jsonl"
 attempt="TQA_${data}_${i}_context"
 
 #echo "
@@ -24,23 +26,23 @@ if ((i >= 1 && i <= 10)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-      --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+      --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
       --write_results \
       --per_gpu_batch_size "$val1" \
       --n_context "$i" \
       --name "$attempt" \
-      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-    --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+    --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
 
 
 elif ((i >= 11 && i <= 20)); then
@@ -52,23 +54,23 @@ elif ((i >= 11 && i <= 20)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-      --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+      --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/"$dataset" \
       --write_results \
       --per_gpu_batch_size "$val1" \
       --n_context "$i" \
       --name "$attempt" \
-      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+      --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/TEST
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-    --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+    --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
 
 elif ((i >= 21 && i <= 33)); then
     val1=$((896 / i))
@@ -79,23 +81,23 @@ elif ((i >= 21 && i <= 33)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-      --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+      --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
       --write_results \
       --per_gpu_batch_size "$val1" \
       --n_context "$i" \
       --name "$attempt" \
-      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-    --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+    --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
 else
     val1=$((992 / i))
 
@@ -105,21 +107,21 @@ else
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-      --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+      --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
       --write_results \
       --per_gpu_batch_size "$val1" \
       --n_context "$i" \
       --name "$attempt" \
-      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+      --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
-    --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
+    --eval_data /data/philhoon-relevance/contriever/NQ/contriever-msmarco/"$dataset" \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DPR/DEV
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_CONTRIEVER/DEV
 fi
