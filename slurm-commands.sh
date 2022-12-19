@@ -5,3 +5,4 @@
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-nq-dev-seal.sh
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-tqa-dev-seal.sh
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-tqa-dev-contriever.sh
+# sbatch --gpus 1 --array=1 --cpus-per-gpu=8 --time=12:00:00 run-real-incremental-slurm-nq-dev-seal-context1.sh
