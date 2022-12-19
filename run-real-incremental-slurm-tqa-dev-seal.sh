@@ -24,7 +24,7 @@ if ((i >= 1 && i <=1)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python python test_reader-slurm.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
       --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
       --write_results \
@@ -33,7 +33,7 @@ if ((i >= 1 && i <=1)); then
       --name "$attempt" \
       --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_SEAL/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
     --write_results \
@@ -51,7 +51,7 @@ elif ((i >= 1 && i <= 10)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
       --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
       --write_results \
@@ -60,7 +60,7 @@ elif ((i >= 1 && i <= 10)); then
       --name "$attempt" \
       --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_SEAL/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
     --write_results \
@@ -79,7 +79,7 @@ elif ((i >= 11 && i <= 20)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
       --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
       --write_results \
@@ -88,7 +88,7 @@ elif ((i >= 11 && i <= 20)); then
       --name "$attempt" \
       --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_SEAL/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
     --write_results \
@@ -106,7 +106,7 @@ elif ((i >= 21 && i <= 33)); then
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
       --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
       --write_results \
@@ -115,7 +115,7 @@ elif ((i >= 21 && i <= 33)); then
       --name "$attempt" \
       --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_SEAL/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
     --write_results \
@@ -133,7 +133,7 @@ else
 #    val1 : "$val1"
 #    "
 
-    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
       --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
       --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
       --write_results \
@@ -142,7 +142,7 @@ else
       --name "$attempt" \
       --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_SEAL/DEV
     "
-    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader.py \
+    CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/TQA/"$dataset" \
     --write_results \
