@@ -16,7 +16,7 @@ attempt="TQA_${data}_${i}_context"
 #"
 
 if ((i >= 1 && i <= 10)); then
-    val1=$((768 / i))
+    val1=$((640 / i))
 
 #    echo " part 1 : "$i" \
 #    CUDA_VISIBLE_DEVICES : "$CUDA_VISIBLE_DEVICES" \

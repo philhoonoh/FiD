@@ -2,7 +2,7 @@
 
 export gpu_=$CUDA_VISIBLE_DEVICES
 
-for file in /data/philhoon-relevance/FiD/open_domain_data/NQ_DEV_CONTRIEVER_SELECTION/*.json
+for file in /data/philhoon-relevance/binary-classification/results/NQ-DEV-DPR/5-fold/1/FiD-Encoder-lstm-12layers-sequence_exclude_no_answer_partial_decisive/step_2160/test_prediction/PREDICTION_SELECTION/*.json
 do
     name=${file##*/}
     base=${name%.json}
@@ -11,19 +11,19 @@ do
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
-        --per_gpu_batch_size 8 \
+        --per_gpu_batch_size 9 \
         --n_context 100 \
         --name "$base" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_CONTRIEVER_SELECTION
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/TQA_DEV_CONTRIEVER_SELECTION/
     "
     CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
         --eval_data "$file" \
         --write_results \
-        --per_gpu_batch_size 8 \
+        --per_gpu_batch_size 9 \
         --n_context 100 \
         --name "$base" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_CONTRIEVER_SELECTION
+        --checkpoint_dir /data/philhoon-relevance/binary-classification/results/NQ-DEV-DPR/5-fold/1/FiD-Encoder-lstm-12layers-sequence_exclude_no_answer_partial_decisive/step_2160/test_prediction/PREDICTION_SELECTION/
 done
 
 # Script for selection strategies
@@ -38,4 +38,6 @@ done
 #        --n_context 5 \
 #        --name "$attempt" \
 #        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_KILT_BM25_SELECTION
+
+
 

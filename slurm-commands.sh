@@ -5,6 +5,7 @@
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-nq-dev-seal.sh
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-tqa-test-dpr.sh
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-tqa-dev-dpr.sh
+# sbatch --gpus 1 --array=1 run-real-incremental-slurm-tqa-dev-dpr.sh
 
 
 # sbatch --gpus 1 --array=1-100 run-real-incremental-slurm-tqa-dev-seal.sh

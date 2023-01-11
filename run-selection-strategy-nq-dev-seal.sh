@@ -2,7 +2,7 @@
 
 export gpu_=$CUDA_VISIBLE_DEVICES
 
-for file in /data/philhoon-relevance/FiD/open_domain_data/NQ_DEV_CONTRIEVER_SELECTION/*.json
+for file in /data/philhoon-relevance/FiD/open_domain_data/NQ_DEV_SEAL_SELECTION/*.json
 do
     name=${file##*/}
     base=${name%.json}
@@ -14,7 +14,7 @@ do
         --per_gpu_batch_size 8 \
         --n_context 100 \
         --name "$base" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_CONTRIEVER_SELECTION
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_SEAL_SELECTION/
     "
     CUDA_VISIBLE_DEVICES="$gpu_" python test_reader-slurm.py \
         --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
@@ -23,7 +23,7 @@ do
         --per_gpu_batch_size 8 \
         --n_context 100 \
         --name "$base" \
-        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_CONTRIEVER_SELECTION
+        --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DEV_SEAL_SELECTION/
 done
 
 # Script for selection strategies
