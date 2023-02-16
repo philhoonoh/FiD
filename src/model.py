@@ -84,6 +84,14 @@ class FiDT5(transformers.T5ForConditionalGeneration):
         for mod in self.encoder.encoder.block:
             mod.use_checkpoint = use_checkpoint
 
+    def reset_score_storage_token(self):
+        """
+        Reset token score storage, only used when cross-attention scores are saved
+        to train a retriever.
+        """
+        for mod in self.decoder.block:
+            mod.layer[1].EncDecAttention.score_storage_token = []
+
     def reset_score_storage(self):
         """
         Reset score storage, only used when cross-attention scores are saved
@@ -91,6 +99,31 @@ class FiDT5(transformers.T5ForConditionalGeneration):
         """
         for mod in self.decoder.block:
             mod.layer[1].EncDecAttention.score_storage = None
+
+    def get_crossattention_scores_token(self, context_mask):
+        """
+        Cross-attention scores are aggregated to obtain a multiple scalar per
+        decoded tokens. This scalar can be seen as a similarity score between the
+        question and the input passage. It is obtained by averaging the
+        cross-attention scores obtained on the sequence of decoded tokens over heads,
+        layers, and tokens of the input passage.
+
+        More details in Distilling Knowledge from Reader to Retriever:
+        https://arxiv.org/abs/2012.04584.
+        """
+        scores = []
+        n_passages = context_mask.size(1)
+        for mod in self.decoder.block:
+            scores.append(mod.layer[1].EncDecAttention.score_storage)
+        scores = torch.cat(scores, dim=2)
+        bsz, n_heads, n_layers, _ = scores.size()
+        # batch_size, n_head, n_layers, n_passages, text_maxlength
+        scores = scores.view(bsz, n_heads, n_layers, n_passages, -1)
+        scores = scores.masked_fill(~context_mask[:, None, None], 0.)
+        scores = scores.sum(dim=[1, 2, 4])
+        ntokens = context_mask.sum(dim=[2]) * n_layers * n_heads
+        scores = scores/ntokens
+        return scores
 
     def get_crossattention_scores(self, context_mask):
         """
@@ -125,6 +158,15 @@ class FiDT5(transformers.T5ForConditionalGeneration):
         for mod in self.decoder.block:
             attn = mod.layer[1].EncDecAttention
             attn.forward = types.MethodType(cross_attention_forward, attn)
+
+    def overwrite_forward_crossattention_token(self):
+        """
+        Replace cross-attention forward function, only used to save
+        cross-attention scores.
+        """
+        for mod in self.decoder.block:
+            attn = mod.layer[1].EncDecAttention
+            attn.forward = types.MethodType(cross_attention_forward_token, attn)
 
 class EncoderWrapper(torch.nn.Module):
     """
@@ -190,6 +232,71 @@ def apply_checkpoint_wrapper(t5stack, use_checkpoint):
         block.append(wrapped_mod)
     block = nn.ModuleList(block)
     t5stack.block = block
+
+def cross_attention_forward_token(
+        self,
+        input,
+        mask=None,
+        kv=None,
+        position_bias=None,
+        past_key_value_state=None,
+        head_mask=None,
+        query_length=None,
+        use_cache=False,
+        output_attentions=False,
+    ):
+    """
+    This only works for computing cross attention over the input
+    """
+    assert(kv != None)
+    assert(head_mask == None)
+    assert(position_bias != None or self.has_relative_attention_bias)
+
+    bsz, qlen, dim = input.size()
+    n_heads, d_heads = self.n_heads, self.d_kv
+    klen = kv.size(1)
+
+    q = self.q(input).view(bsz, -1, n_heads, d_heads).transpose(1, 2)
+    if past_key_value_state == None:
+        k = self.k(kv).view(bsz, -1, n_heads, d_heads).transpose(1, 2)
+        v = self.v(kv).view(bsz, -1, n_heads, d_heads).transpose(1, 2)
+    else:
+        k, v = past_key_value_state
+
+    scores = torch.einsum("bnqd,bnkd->bnqk", q, k)
+
+    if mask is not None:
+       scores += mask
+
+    if position_bias is None:
+        position_bias = self.compute_bias(qlen, klen)
+    scores += position_bias
+
+    if self.score_storage is None:
+        self.score_storage = scores
+
+    if isinstance(self.score_storage_token, list):
+        self.score_storage_token.append(scores)
+
+    attn = F.softmax(scores.float(), dim=-1).type_as(scores)
+    attn = F.dropout(attn, p=self.dropout, training=self.training)
+
+    output = torch.matmul(attn, v)
+    output = output.transpose(1, 2).contiguous().view(bsz, -1, self.inner_dim)
+    output = self.o(output)
+
+    if use_cache:
+        output = (output,) + ((k, v),)
+    else:
+        output = (output,) + (None,)
+
+    if output_attentions:
+        output = output + (attn,)
+
+    if self.has_relative_attention_bias:
+        output = output + (position_bias,)
+
+    return output
 
 def cross_attention_forward(
         self,
