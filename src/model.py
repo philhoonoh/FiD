@@ -102,28 +102,33 @@ class FiDT5(transformers.T5ForConditionalGeneration):
 
     def get_crossattention_scores_token(self, context_mask):
         """
-        Cross-attention scores are aggregated to obtain a multiple scalar per
-        decoded tokens. This scalar can be seen as a similarity score between the
-        question and the input passage. It is obtained by averaging the
-        cross-attention scores obtained on the sequence of decoded tokens over heads,
-        layers, and tokens of the input passage.
+        Cross-attention scores on all decoder layers, all heads, all decoded tokens
 
         More details in Distilling Knowledge from Reader to Retriever:
         https://arxiv.org/abs/2012.04584.
         """
-        scores = []
+        scores_token_lst = []
         n_passages = context_mask.size(1)
         for mod in self.decoder.block:
-            scores.append(mod.layer[1].EncDecAttention.score_storage)
-        scores = torch.cat(scores, dim=2)
-        bsz, n_heads, n_layers, _ = scores.size()
-        # batch_size, n_head, n_layers, n_passages, text_maxlength
-        scores = scores.view(bsz, n_heads, n_layers, n_passages, -1)
-        scores = scores.masked_fill(~context_mask[:, None, None], 0.)
-        scores = scores.sum(dim=[1, 2, 4])
-        ntokens = context_mask.sum(dim=[2]) * n_layers * n_heads
-        scores = scores/ntokens
-        return scores
+            att_score_layer_lst = mod.layer[1].EncDecAttention.score_storage_token
+            att_score_layer = torch.cat(att_score_layer_lst, dim=2)
+            scores_token_lst.append(att_score_layer)
+        att_score_by_token = torch.stack(scores_token_lst, dim=0)
+        n_layers, bsz, n_head, n_dec_tokens, _ = att_score_by_token.size()
+
+        # permute axis
+        # from : n_layers, batch_size, n_heads, decode_tokens, n_passages * text_maxlength
+        # to : batch_size, decode_tokens, n_heads, n_layers, n_passages, input_max_length
+        att_score_by_token = att_score_by_token.permute(1, 3, 2, 0, 4)
+        att_score_by_token = att_score_by_token.view(bsz, n_dec_tokens, n_head, n_layers, n_passages, -1)
+        att_score_by_token = att_score_by_token.masked_fill(~context_mask[:, None, None, None], 0.)
+
+        # permute axis for saving results
+        # from : batch_size, decode_tokens, n_heads, n_layers, n_passages, input_max_length
+        # to: batch_size, n_passages, decode_tokens, n_heads, n_layers, input_max_length
+        att_score_by_token = att_score_by_token.permute(0, 4, 1, 2, 3, 5)
+
+        return att_score_by_token
 
     def get_crossattention_scores(self, context_mask):
         """

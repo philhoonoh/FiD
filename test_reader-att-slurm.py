@@ -25,8 +25,13 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
     if hasattr(model, "module"):
         model = model.module
     if opt.write_crossattention_scores:
-        model.overwrite_forward_crossattention()
-        model.reset_score_storage() 
+        # model.overwrite_forward_crossattention()
+        # model.reset_score_storage()
+
+        model.overwrite_forward_crossattention_token()
+        model.reset_score_storage_token()
+        model.reset_score_storage()
+
     total = 0
     exactmatch = []
     opt.global_rank = 1
@@ -49,6 +54,7 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
             if opt.write_crossattention_scores:
                 crossattention_scores = model.get_crossattention_scores(context_mask.cuda())
 
+            # outputs are batched
             for k, o in enumerate(outputs):
                 ans = tokenizer.decode(o, skip_special_tokens=True)
                 example = dataset.data[idx[k]]

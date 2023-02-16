@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import torch.distributed as dist
 import csv
+import pickle
 
 logger = logging.getLogger(__name__)
 
@@ -207,6 +208,32 @@ def save_distributed_dataset(data, opt):
         with open(final_path, 'w') as fout:
             json.dump(alldata, fout, indent=4)
         write_path.rmdir()
+
+
+def save_distributed_att_score(att_score_lst, opt):
+    dir_path = Path(opt.checkpoint_dir) / opt.name
+    write_path = dir_path / 'tmp_dir'
+    write_path.mkdir(exist_ok=True)
+    tmp_path = write_path / f'{opt.global_rank}.pickle'
+    with open(tmp_path, 'wb') as fw:
+        pickle.dump(att_score_lst, fw)
+    if opt.is_distributed:
+        torch.distributed.barrier()
+    if opt.is_main:
+        final_path = dir_path / 'attention_score.pickle'
+        logger.info(f'Writing dataset with scores at {final_path}')
+        glob_path = write_path / '*'
+        results_path = write_path.glob('*.pickle')
+        alldata = []
+        for path in results_path:
+            with open(path, 'rb') as f:
+                data = pickle.load(f)
+            alldata.extend(data)
+            path.unlink()
+        with open(final_path, 'wb') as fout:
+            pickle.dump(alldata, fout)
+        write_path.rmdir()
+
 
 def load_passages(path):
     if not os.path.exists(path):
