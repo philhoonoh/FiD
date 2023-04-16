@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 
-for i in {33..40}; do
+for i in {41..49}; do
     val1=$((192 / i))
 
     attempt="NQ_dpr_noraml_${i}_context"
-    echo "CUDA_VISIBLE_DEVICES=0 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=1 python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/dpr_normal/nq-dev.json \
     --write_results \
@@ -14,7 +14,7 @@ for i in {33..40}; do
     --name "$attempt" \
     --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/dpr_normal
     "
-    CUDA_VISIBLE_DEVICES=0 python test_reader.py \
+    CUDA_VISIBLE_DEVICES=1 python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/dpr_normal/nq-dev.json \
     --write_results \

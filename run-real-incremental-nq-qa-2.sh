@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 
 
-for i in {33..40}; do
+for i in {54..80}; do
     val1=$((192 / i))
 
     attempt="NQ_dpr_noraml_${i}_context"
-    echo "CUDA_VISIBLE_DEVICES=0 python test_reader.py \
+    echo "CUDA_VISIBLE_DEVICES=1 python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/dpr_normal/nq-dev.json \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/dpr_normal
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/dpr_normal2
     "
-    CUDA_VISIBLE_DEVICES=0 python test_reader.py \
+    CUDA_VISIBLE_DEVICES=1 python test_reader.py \
     --model_path /data/philhoon-relevance/FiD/pretrained_models/nq_reader_large \
     --eval_data /data/philhoon-relevance/FiD/open_domain_data/NQ/dpr_normal/nq-dev.json \
     --write_results \
     --per_gpu_batch_size "$val1" \
     --n_context "$i" \
     --name "$attempt" \
-    --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/dpr_normal
+    --checkpoint_dir /data/philhoon-relevance/FiD/results/NQ_DPR/dpr_normal2
 done
 
 
@@ -61,5 +61,3 @@ done
 #--n_context 1 \ 1,2,3,4,5
 #--name first_context \ 1_context, 2_context, 3_context, ...
 #--checkpoint_dir /data/philhoon-relevance/FiD/results fixed
-
-# sbatch -p --gpus 1 --cpus-per-gpu=8 slurm-decoder-gpt-predict-2.sh

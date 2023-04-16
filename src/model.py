@@ -90,6 +90,7 @@ class FiDT5(transformers.T5ForConditionalGeneration):
         to train a retriever.
         """
         for mod in self.decoder.block:
+            mod.layer[1].EncDecAttention.score_storage_token = None
             mod.layer[1].EncDecAttention.score_storage_token = []
 
     def reset_score_storage(self):
@@ -127,6 +128,16 @@ class FiDT5(transformers.T5ForConditionalGeneration):
         # from : batch_size, decode_tokens, n_heads, n_layers, n_passages, input_max_length
         # to: batch_size, n_passages, decode_tokens, n_heads, n_layers, input_max_length
         att_score_by_token = att_score_by_token.permute(0, 4, 1, 2, 3, 5)
+
+        # Average Across the Heads
+        # from : batch_size, n_passages, decode_tokens, n_heads, n_layers, input_max_length
+        # to: batch_size, n_passages, decode_tokens, n_layers, input_max_length
+        att_score_by_token = torch.mean(att_score_by_token, 3)
+
+        # Get Last Layer Attention only
+        # from : batch_size, n_passages, decode_tokens, n_layers, input_max_length
+        # to: batch_size, n_passages, decode_tokens, input_max_length
+        # att_score_by_token = att_score_by_token[:, :, :, -1, :]
 
         return att_score_by_token
 

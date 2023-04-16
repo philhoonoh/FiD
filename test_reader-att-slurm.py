@@ -27,7 +27,6 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
     if opt.write_crossattention_scores:
         # model.overwrite_forward_crossattention()
         # model.reset_score_storage()
-
         model.overwrite_forward_crossattention_token()
         model.reset_score_storage_token()
         model.reset_score_storage()
@@ -35,6 +34,8 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
     total = 0
     exactmatch = []
     opt.global_rank = 1
+    att_score_lst = []
+
     if opt.write_results:
         write_path = Path(opt.checkpoint_dir) / opt.name / 'test_results'
         fw = open(write_path / ('%d.txt'%opt.global_rank), 'a')
@@ -43,6 +44,7 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
             (idx, _, _, context_ids, context_mask) = batch
 
             if opt.write_crossattention_scores:
+                model.reset_score_storage_token()
                 model.reset_score_storage()
 
             outputs = model.generate(
@@ -52,7 +54,8 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
             )
 
             if opt.write_crossattention_scores:
-                crossattention_scores = model.get_crossattention_scores(context_mask.cuda())
+                # crossattention_scores = model.get_crossattention_scores(context_mask.cuda())
+                att_score_by_token = model.get_crossattention_scores_token(context_mask.cuda())
 
             # outputs are batched
             for k, o in enumerate(outputs):
@@ -65,8 +68,15 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
                 if opt.write_results:
                     fw.write(str(example['id']) + "\t" + ans  + "\t" + str(score) + '\n')
                 if opt.write_crossattention_scores:
-                    for j in range(context_ids.size(1)):
-                        example['ctxs'][j]['score'] = crossattention_scores[k, j].item()
+                    # for j in range(context_ids.size(1)):
+                    #     example['ctxs'][j]['score'] = crossattention_scores[k, j].item()
+                    att_score_on_k = att_score_by_token[k].detach().cpu()
+                    att_score_lst.append(
+                        {
+                            'id': idx[k],
+                            'attention_score': att_score_on_k,
+                        }
+                    )
 
                 total += 1
             if (i + 1) % opt.eval_print_freq == 0:
@@ -82,7 +92,7 @@ def evaluate(model, dataset, dataloader, tokenizer, opt):
         torch.distributed.barrier()
     score, total = src.util.weighted_average(np.mean(exactmatch), total, opt)
     
-    return score, total
+    return score, total, att_score_lst
 
 
 if __name__ == "__main__":
@@ -152,7 +162,7 @@ if __name__ == "__main__":
     model = model.to(device)
 
     logger.info("Start eval")
-    exactmatch, total = evaluate(model, eval_dataset, eval_dataloader, tokenizer, opt)
+    exactmatch, total, att_score_lst = evaluate(model, eval_dataset, eval_dataloader, tokenizer, opt)
 
     logger.info(f'EM {100*exactmatch:.2f}, Total number of example {total}')
 
@@ -161,5 +171,6 @@ if __name__ == "__main__":
         write_path = Path(opt.checkpoint_dir) / opt.name / 'final_output.txt'
         src.util.write_output(glob_path, write_path) 
     if opt.write_crossattention_scores:
-        src.util.save_distributed_dataset(eval_dataset.data, opt)
+        # src.util.save_distributed_dataset(eval_dataset.data, opt)
+        src.util.save_distributed_att_score(att_score_lst, opt)
 
