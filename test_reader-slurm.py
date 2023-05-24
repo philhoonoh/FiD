@@ -135,7 +135,7 @@ if __name__ == "__main__":
         eval_dataset, 
         sampler=eval_sampler, 
         batch_size=opt.per_gpu_batch_size,
-        num_workers=10,
+        num_workers=8,
         collate_fn=collator_function
     )
     

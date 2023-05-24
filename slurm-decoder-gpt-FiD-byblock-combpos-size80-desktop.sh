@@ -4,7 +4,7 @@
 #export i=$SLURM_ARRAY_TASK_ID
 #echo $CUDA_VISIBLE_DEVICES
 export gpu_=$CUDA_VISIBLE_DEVICES
-#export gpu_=0
+#export gpu_=1
 
 
 # FiD setting
@@ -13,7 +13,7 @@ model_path="/data/philhoon-relevance/FiD/pretrained_models/nq_reader_large"
 # Given a Model Path
 # Find directories recursively in the current directory containing "blocksize40" &"Probes" in their names
 path="/scratch/philhoon-relevance/decoder-classification/results/NQ-DEV-DPR/5-fold/1"
-block_size=20
+block_size=80
 count=0
 # e.g.) /scratch/philhoon-relevance/decoder-classification/results/NQ-DEV-DPR/5-fold/1/decoder-seq-classifier-layer24-batch64Xgr2-lr6e-5-combdata-blocksize20/step_100/result/NQ-TEST/Probes
 dirs=( $(find "$path" -type d -name "*blocksize$block_size" -print) )
@@ -100,5 +100,5 @@ done
 echo "$count"
 
 
-### sbatch -p desktop1 --gpus 1 --cpus-per-gpu=8 slurm-decoder-gpt-FiD-byblock-combpos-size20-desktop.sh
+### sbatch -p desktop1 --gpus 1 --cpus-per-gpu=8 slurm-decoder-gpt-FiD-byblock-combpos-size80-desktop.sh
 
